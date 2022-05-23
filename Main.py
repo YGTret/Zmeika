@@ -18,7 +18,7 @@ check_errors = pygame.init()
 if check_errors[1] > 0:
     print("Error " + check_errors[1])
 else:
-    print("Game Succesfully initialized")
+    print("Game Successfully initialized")
 
 # initialized game window
 
@@ -38,7 +38,7 @@ cell_size = 60
 
 
 def init_vars():
-    global head_pos, snake_body, food_pos, food_spawn, score, direction
+    global head_pos, snake_body, food_pos, food_spawn, score, direction, antifood_pos, antifood_spawn
     direction = "RIGHT"
     head_pos = [120, 60]
     snake_body = [[120, 60]]
@@ -46,7 +46,9 @@ def init_vars():
                 random.randrange(1, (frame_size_y // cell_size)) * cell_size]
     food_spawn = True
     score = 0
-
+    antifood_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
+                random.randrange(1, (frame_size_y // cell_size)) * cell_size]
+    antifood_spawn = True
 
 init_vars()
 
@@ -65,11 +67,10 @@ def show_score(choice, color, font, size):
 
 # game loop
 def game():
-    global food_spawn, food_pos, score
+    global food_spawn, food_pos, score, center_food_x, center_food_y, radius, antifood_pos
     while True:
         check_events()
         check_death()
-
         # eating apple
         snake_body.insert(0, list(head_pos))
         if head_pos[0] == food_pos[0] and head_pos[1] == food_pos[1]:
@@ -85,12 +86,18 @@ def game():
 
         food_spawn = True
 
+        
+
+
+
         game_window.fill(black)
         head = 1
         for pos in snake_body:
             center_x = pos[0] + 2 + (cell_size - 2) // 2
             center_y = pos[1] + 2 + (cell_size - 2) // 2
             radius = (cell_size - 2) // 2
+            center_food_x = food_pos[0] + 2 + (cell_size - 2) // 2
+            center_food_y = food_pos[1] + 2 + (cell_size - 2) // 2
             # pygame.draw.rect(game_window, green, pygame.Rect(
             #    pos[0] + 2, pos[1] + 2,
             #    square_size - 2, square_size - 2))
@@ -100,8 +107,7 @@ def game():
                 continue
             pygame.draw.circle(game_window, blue, (center_x, center_y), radius, radius)
 
-        pygame.draw.rect(game_window, red, pygame.Rect(food_pos[0],
-                                                       food_pos[1], cell_size, cell_size))
+        pygame.draw.circle(game_window, red, (center_food_x, center_food_y),radius, radius  )
 
         # GAME OVER
         for block in snake_body[1:]:
@@ -152,6 +158,9 @@ def check_death():
         init_vars()
     elif head_pos[1] > frame_size_y - cell_size:
         init_vars()
+    for block in snake_body[1:]:
+        if head_pos[0] == block[0] and head_pos[1] == block[1]:
+            init_vars()
 
 
 if __name__ == '__main__':
