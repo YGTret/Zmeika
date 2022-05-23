@@ -1,7 +1,7 @@
 import pygame
 import random
 import sys
-import time 
+import time
 
 speed = 15
 
@@ -35,7 +35,7 @@ square_size = 60
 
 def init_vars():
     global head_pos, snake_body, food_pos, food_spawn, score, direction
-    direction = "Right"
+    direction = "RIGHT"
     head_pos = [120,60]
     snake_body = [[120,60]]
     food_pos = [random.randrange(1,(frame_size_x // square_size)) * square_size,
@@ -109,13 +109,15 @@ if not food_spawn:
     food_pos = [random.randrange(1,(frame_size_x // square_szie)) * square_size,
         random.randrange(1,(frame_szie_y // square_size)) * square_size]
 
+food_spawn = True
+
 game_window.fill(black)
 for pos in snake_body:
-    pygame.draw.rect(game_window, greeen, pygame.rect(
+    pygame.draw.rect(game_window, greeen, pygame.Rect(
         pos[0] + 2, pos[1] + 2,
         square_size -2, square_sizq -2))
 
-pygame.draw.rect(game_window,red, pygame.rect(food_pos[0],
+pygame.draw.rect(game_window,red, pygame.Rect(food_pos[0],
                 food_pos[1], square_size, square_size))
 
 #GAME OVER
