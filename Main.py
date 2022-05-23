@@ -2,7 +2,9 @@ import pygame
 import random
 import sys
 
-speed = 15
+speed = 2
+x = 0
+y = 1
 
 global head_pos, snake_body, food_pos, food_spawn, score, direction
 
@@ -32,7 +34,7 @@ blue = pygame.Color(0, 0, 255)
 
 fps_controller = pygame.time.Clock()
 # One zmeika square size
-square_size = 60
+cell_size = 60
 
 
 def init_vars():
@@ -40,8 +42,8 @@ def init_vars():
     direction = "RIGHT"
     head_pos = [120, 60]
     snake_body = [[120, 60]]
-    food_pos = [random.randrange(1, (frame_size_x // square_size)) * square_size,
-                random.randrange(1, (frame_size_y // square_size)) * square_size]
+    food_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
+                random.randrange(1, (frame_size_y // cell_size)) * cell_size]
     food_spawn = True
     score = 0
 
@@ -62,8 +64,57 @@ def show_score(choice, color, font, size):
 
 
 # game loop
+def game():
+    global food_spawn, food_pos, score
+    while True:
+        check_events()
+        check_death()
 
-while True:
+        # eating apple
+        snake_body.insert(0, list(head_pos))
+        if head_pos[0] == food_pos[0] and head_pos[1] == food_pos[1]:
+            score += 1
+            food_spawn = False
+        else:
+            snake_body.pop()
+
+        # spawn food
+        if not food_spawn:
+            food_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
+                        random.randrange(1, (frame_size_y // cell_size)) * cell_size]
+
+        food_spawn = True
+
+        game_window.fill(black)
+        head = 1
+        for pos in snake_body:
+            center_x = pos[0] + 2 + (cell_size - 2) // 2
+            center_y = pos[1] + 2 + (cell_size - 2) // 2
+            radius = (cell_size - 2) // 2
+            # pygame.draw.rect(game_window, green, pygame.Rect(
+            #    pos[0] + 2, pos[1] + 2,
+            #    square_size - 2, square_size - 2))
+            if head == 1:
+                pygame.draw.circle(game_window, green, (center_x, center_y), radius, radius)
+                head = 0
+                continue
+            pygame.draw.circle(game_window, blue, (center_x, center_y), radius, radius)
+
+        pygame.draw.rect(game_window, red, pygame.Rect(food_pos[0],
+                                                       food_pos[1], cell_size, cell_size))
+
+        # GAME OVER
+        for block in snake_body[1:]:
+            if head_pos[0] == block[0] and head_pos[1] == block[1]:
+                init_vars()
+
+        show_score(1, white, 'consolas', 20)
+        pygame.display.update()
+        fps_controller.tick(speed)
+
+
+def check_events():
+    global direction
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -82,54 +133,26 @@ while True:
             elif (event.key == pygame.K_RIGHT or event.key == ord("d")
                   and direction != "LEFT"):
                 direction = "RIGHT"
+    if direction == "UP":
+        head_pos[y] -= cell_size
+    elif direction == "DOWN":
+        head_pos[y] += cell_size
+    elif direction == "LEFT":
+        head_pos[x] -= cell_size
+    else:
+        head_pos[x] += cell_size
 
-if direction == "UP":
-    head_pos[1] -= square_size
-elif direction == "DOWN":
-    head_pos[1] += square_size
-elif direction == "LEFT":
-    head_pos[0] -= square_size
-else:
-    head_pos[0] += square_size
 
-if head_pos[0] < 0:
-    head_pos[0] = frame_size_x - square_size
-elif head_pos[0] > frame_size_x - square_size:
-    head_pos[0] = 0
-elif head_pos[1] < 0:
-    head_pos[1] = frame_size_y - square_size
-elif head_pos[1] > frame_size_y - square_size:
-    head_pos[1] = 0
-
-# eating apple
-snake_body.insert(0, list(head_pos))
-if head_pos[0] == food_pos[0] and head_pos[1] == food_pos[1]:
-    score += 1
-    food_spawn = False
-else:
-    snake_body.pop()
-
-# spawn food
-if not food_spawn:
-    food_pos = [random.randrange(1, (frame_size_x // square_size)) * square_size,
-                random.randrange(1, (frame_size_y // square_size)) * square_size]
-
-food_spawn = True
-
-game_window.fill(black)
-for pos in snake_body:
-    pygame.draw.rect(game_window, green, pygame.Rect(
-        pos[0] + 2, pos[1] + 2,
-        square_size - 2, square_size - 2))
-
-pygame.draw.rect(game_window, red, pygame.Rect(food_pos[0],
-                                               food_pos[1], square_size, square_size))
-
-# GAME OVER
-for block in snake_body[1:]:
-    if head_pos[0] == block[0] and head_pos[1] == block[1]:
+def check_death():
+    if head_pos[0] < 0:
+        init_vars()
+    elif head_pos[0] > frame_size_x - cell_size:
+        init_vars()
+    elif head_pos[1] < 0:
+        init_vars()
+    elif head_pos[1] > frame_size_y - cell_size:
         init_vars()
 
-show_score(1, white, 'consolas', 20)
-pygame.display.update()
-fps_controller.tick(speed)
+
+if __name__ == '__main__':
+    game()
