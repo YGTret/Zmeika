@@ -2,6 +2,7 @@ import pygame
 import random
 import sys
 
+level = 0
 x = 0
 y = 1
 
@@ -64,7 +65,7 @@ def show_score(choice, color, font, size):
 
 # game loop
 def game():
-    global food_spawn, food_pos, score, center_food_x, center_food_y, radius, antifood_pos, antifood_spawn, center_antifood_x, center_antifood_y, speed
+    global food_spawn, food_pos, score, center_food_x, center_food_y, radius, antifood_pos, antifood_spawn, center_antifood_x, center_antifood_y, speed, level
     while True:
         check_events()
         check_death()
@@ -80,7 +81,6 @@ def game():
             snake_body.pop()
             antifood_spawn = False
 
-
         # spawn food
         if not food_spawn:
             food_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
@@ -92,11 +92,6 @@ def game():
             antifood_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
                             random.randrange(1, (frame_size_y // cell_size)) * cell_size]
         antifood_spawn = True
-
-        if score == 5:
-            speed = 5
-        if score == 15:
-            speed = 10
 
         game_window.fill(black)
         head = 1
