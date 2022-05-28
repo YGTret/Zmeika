@@ -6,8 +6,6 @@ import sys
 level = 0
 x = 0
 y = 1
-Key1 = False
-Key2 = False
 
 global head_pos, snake_body, food_pos, food_spawn, score, direction, death
 
@@ -178,6 +176,9 @@ def check_death():
         death = True
 
     elif head_pos[1] > frame_size_y - cell_size:
+        death = True
+
+    elif len(snake_body) == 0:
         death = True
 
     for block in snake_body[1:]:
