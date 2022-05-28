@@ -152,6 +152,10 @@ def check_events():
             elif (event.key == pygame.K_RIGHT or event.key == ord("d")
                   and direction != "LEFT"):
                 direction = "RIGHT"
+            elif (event.key == pygame.K_y):
+                Key1 = True
+            elif (event.key == pygame.K_n):
+                Key2 = True
     if direction == "UP":
         head_pos[y] -= cell_size
     elif direction == "DOWN":
@@ -161,10 +165,7 @@ def check_events():
     else:
         head_pos[x] += cell_size
 
-    if event.type == pygame.K_y:
-      Key1 = True
-    elif event.type == pygame.K_n:
-        Key2 = True
+
 
     if Key1 == True:
        death = False
