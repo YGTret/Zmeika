@@ -133,7 +133,7 @@ def game():
 
 
 def check_events():
-    global direction, event, Key1, Key2
+    global direction, event, death
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -153,9 +153,10 @@ def check_events():
                   and direction != "LEFT"):
                 direction = "RIGHT"
             elif (event.key == pygame.K_y):
-                Key1 = True
+                death = False
+                init_vars()
             elif (event.key == pygame.K_n):
-                Key2 = True
+                pygame.quit()
     if direction == "UP":
         head_pos[y] -= cell_size
     elif direction == "DOWN":
@@ -164,16 +165,6 @@ def check_events():
         head_pos[x] -= cell_size
     else:
         head_pos[x] += cell_size
-
-
-
-    if Key1 == True:
-       death = False
-       init_vars()
-    elif Key2 == True:
-        pygame.quit()
-
-
 
 def check_death():
     global death
