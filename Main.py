@@ -2,6 +2,7 @@ import pygame
 import random
 import sys
 
+
 level = 0
 x = 0
 y = 1
@@ -69,6 +70,7 @@ def game():
     while True:
         check_events()
         check_death()
+       
         # eating apple
         snake_body.insert(0, list(head_pos))
         if head_pos[0] == food_pos[0] and head_pos[1] == food_pos[1]:
@@ -157,16 +159,29 @@ def check_events():
 
 def check_death():
     if head_pos[0] < 0:
-        init_vars()
+        print_text()
+
     elif head_pos[0] > frame_size_x - cell_size:
-        init_vars()
+        print_text()
+
     elif head_pos[1] < 0:
-        init_vars()
+        print_text()
+
     elif head_pos[1] > frame_size_y - cell_size:
-        init_vars()
+        print_text()
+
     for block in snake_body[1:]:
         if head_pos[0] == block[0] and head_pos[1] == block[1]:
-            init_vars()
+            print_text()
+
+
+def print_text():
+  font1 = pygame.font.SysFont('arial', 42)
+  surface = font1.render('Game Over', True, blue)
+  textrect = surface.get_rect()
+  textrect.center = (690, 210)
+  game_window.blit(surface, textrect)
+  pygame.display.flip()
 
 
 if __name__ == '__main__':
