@@ -6,6 +6,8 @@ import sys
 level = 0
 x = 0
 y = 1
+Key1 = False
+Key2 = False
 
 global head_pos, snake_body, food_pos, food_spawn, score, direction, death
 
@@ -48,7 +50,7 @@ def init_vars():
                     random.randrange(1, (frame_size_y // cell_size)) * cell_size]
     antifood_spawn = True
 
-    death = False;
+    death = False
 
 
 init_vars()
@@ -131,7 +133,7 @@ def game():
 
 
 def check_events():
-    global direction
+    global direction, event, Key1, Key2
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -159,6 +161,18 @@ def check_events():
     else:
         head_pos[x] += cell_size
 
+    if event.type == pygame.K_y:
+      Key1 = True
+    elif event.type == pygame.K_n:
+        Key2 = True
+
+    if Key1 == True:
+       death = False
+       init_vars()
+    elif Key2 == True:
+        pygame.quit()
+
+
 
 def check_death():
     global death
@@ -183,7 +197,7 @@ def print_text():
   global death
   if death:
       font1 = pygame.font.SysFont('arial', 42)
-      surface = font1.render('Game Over', True, blue)
+      surface = font1.render('Game Over, Press Y to continue or press N to quit', True, blue)
       textrect = surface.get_rect()
       textrect.center = (690, 210)
       game_window.blit(surface, textrect)
