@@ -7,7 +7,7 @@ level = 0
 x = 0
 y = 1
 
-global head_pos, snake_body, food_pos, food_spawn, score, direction
+global head_pos, snake_body, food_pos, food_spawn, score, direction, death
 
 # windows sizes
 
@@ -35,7 +35,7 @@ cell_size = 60
 
 
 def init_vars():
-    global head_pos, snake_body, food_pos, food_spawn, score, direction, antifood_pos, antifood_spawn, speed
+    global head_pos, snake_body, food_pos, food_spawn, score, direction, antifood_pos, antifood_spawn, speed, death
     direction = "RIGHT"
     head_pos = [120, 60]
     snake_body = [[120, 60]]
@@ -47,6 +47,8 @@ def init_vars():
     antifood_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
                     random.randrange(1, (frame_size_y // cell_size)) * cell_size]
     antifood_spawn = True
+
+    death = False;
 
 
 init_vars()
@@ -70,7 +72,7 @@ def game():
     while True:
         check_events()
         check_death()
-       
+
         # eating apple
         snake_body.insert(0, list(head_pos))
         if head_pos[0] == food_pos[0] and head_pos[1] == food_pos[1]:
@@ -123,6 +125,7 @@ def game():
                 init_vars()
 
         show_score(1, white, 'consolas', 20)
+        print_text()
         pygame.display.update()
         fps_controller.tick(speed)
 
@@ -158,30 +161,32 @@ def check_events():
 
 
 def check_death():
+    global death
     if head_pos[0] < 0:
-        print_text()
+        death = True
 
     elif head_pos[0] > frame_size_x - cell_size:
-        print_text()
+        death = True
 
     elif head_pos[1] < 0:
-        print_text()
+        death = True
 
     elif head_pos[1] > frame_size_y - cell_size:
-        print_text()
+        death = True
 
     for block in snake_body[1:]:
         if head_pos[0] == block[0] and head_pos[1] == block[1]:
-            print_text()
+            death = True
 
 
 def print_text():
-  font1 = pygame.font.SysFont('arial', 42)
-  surface = font1.render('Game Over', True, blue)
-  textrect = surface.get_rect()
-  textrect.center = (690, 210)
-  game_window.blit(surface, textrect)
-  pygame.display.flip()
+  global death
+  if death:
+      font1 = pygame.font.SysFont('arial', 42)
+      surface = font1.render('Game Over', True, blue)
+      textrect = surface.get_rect()
+      textrect.center = (690, 210)
+      game_window.blit(surface, textrect)
 
 
 if __name__ == '__main__':
