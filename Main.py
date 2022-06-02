@@ -87,8 +87,10 @@ def game():
 
         if score == 5:
             speed = 7
+            level = 1
         if score == 10:
             speed = 10
+            level = 2
 
         # spawn food
         if not food_spawn:
