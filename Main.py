@@ -85,6 +85,11 @@ def game():
             snake_body.pop()
             antifood_spawn = False
 
+        if score == 5:
+            speed = 7
+        if score == 10:
+            speed = 10
+
         # spawn food
         if not food_spawn:
             food_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
