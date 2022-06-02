@@ -114,17 +114,14 @@ def game():
             center_food_y = food_pos[1] + 2 + (cell_size - 2) // 2
             center_antifood_x = antifood_pos[0] + 2 + (cell_size - 2) // 2
             center_antifood_y = antifood_pos[1] + 2 + (cell_size - 2) // 2
-            # pygame.draw.rect(game_window, green, pygame.Rect(
-            #    pos[0] + 2, pos[1] + 2,
-            #    square_size - 2, square_size - 2))
             if head == 1:
                 pygame.draw.circle(game_window, green, (center_x, center_y), radius, radius)
                 head = 0
                 continue
             pygame.draw.circle(game_window, blue, (center_x, center_y), radius, radius)
 
-        pygame.draw.circle(game_window, red, (center_food_x, center_food_y), radius, radius)
-        pygame.draw.circle(game_window, fiol, (center_antifood_x, center_antifood_y), radius, radius)
+        pygame.draw.circle(game_window, fiol, (center_food_x, center_food_y), radius, radius)
+        pygame.draw.circle(game_window, red, (center_antifood_x, center_antifood_y), radius, radius)
 
         # GAME OVER
         for block in snake_body[1:]:
