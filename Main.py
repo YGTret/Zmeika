@@ -134,6 +134,9 @@ def game():
         fps_controller.tick(speed)
 
 
+
+
+
 def check_events():
     global direction, event, death
     for event in pygame.event.get():
