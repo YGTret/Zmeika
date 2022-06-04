@@ -86,10 +86,10 @@ def game():
             antifood_spawn = False
 
         if score == 5:
-            speed = 7
+            speed = 5
             level = 1
         if score == 10:
-            speed = 10
+            speed = 7
             level = 2
 
         # spawn food
@@ -171,13 +171,13 @@ def check_events():
 def check_death():
     global death
     if head_pos[0] < 0:
-        death = True
+        init_vars()
 
     elif head_pos[0] > frame_size_x - cell_size:
         death = True
 
     elif head_pos[1] < 0:
-        death = True
+        init_vars()
 
     elif head_pos[1] > frame_size_y - cell_size:
         death = True
