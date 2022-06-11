@@ -7,6 +7,7 @@ level = 0
 x = 0
 y = 1
 
+
 global head_pos, snake_body, food_pos, food_spawn, score, direction, death
 
 # windows sizes
@@ -73,6 +74,21 @@ def game():
         check_events()
         check_death()
 
+        if score == 5:
+            speed = 4
+            level = 1
+        if score == 10:
+            speed = 6
+            level = 2
+        if score == 15:
+            speed = 8
+            level = 3
+        if score == 20:
+            speed = 10
+            level = 4
+        if score == 25:
+            speed = 12
+            level = 5
 
         # eating apple
         snake_body.insert(0, list(head_pos))
@@ -118,10 +134,8 @@ def game():
         pygame.draw.circle(game_window, fiol, (center_food_x, center_food_y), radius, radius)
         pygame.draw.circle(game_window, red, (center_antifood_x, center_antifood_y), radius, radius)
 
-        # GAME OVER
-        for block in snake_body[1:]:
-            if head_pos[0] == block[0] and head_pos[1] == block[1]:
-                init_vars()
+
+
 
         show_score(1, white, 'consolas', 20)
         print_text()
@@ -168,23 +182,23 @@ def check_events():
 
 def check_death():
     global death
-    if head_pos[0] < 0:
-        init_vars()
-
-    elif head_pos[0] > frame_size_x - cell_size:
+    if head_pos[x] < 0:
         death = True
 
-    elif head_pos[1] < 0:
-        init_vars()
+    elif head_pos[x] > frame_size_x - cell_size:
+        death = True
 
-    elif head_pos[1] > frame_size_y - cell_size:
+    elif head_pos[y] < 0:
+        death = True
+
+    elif head_pos[y] > frame_size_y - cell_size:
         death = True
 
     elif len(snake_body) == 0:
         death = True
 
     for block in snake_body[1:]:
-        if head_pos[0] == block[0] and head_pos[1] == block[1]:
+        if head_pos[x] == block[x] and head_pos[y] == block[y]:
             death = True
 
 
@@ -192,7 +206,7 @@ def print_text():
   global death
   if death:
       font1 = pygame.font.SysFont('arial', 42)
-      surface = font1.render('Game Over, Press Y to continue or press N to quit', True, blue)
+      surface = font1.render('Game Over, Press Y to continue or press N to quit. Score:' + str(score), True, blue)
       textrect = surface.get_rect()
       textrect.center = (690, 210)
       game_window.blit(surface, textrect)
