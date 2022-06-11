@@ -73,11 +73,13 @@ def game():
         check_events()
         check_death()
 
+
         # eating apple
         snake_body.insert(0, list(head_pos))
         if head_pos[0] == food_pos[0] and head_pos[1] == food_pos[1]:
             score += 1
             food_spawn = False
+            antifood_spawn = False
         else:
             snake_body.pop()
 
@@ -85,18 +87,11 @@ def game():
             snake_body.pop()
             antifood_spawn = False
 
-        if score == 5:
-            speed = 5
-            level = 1
-        if score == 10:
-            speed = 7
-            level = 2
 
         # spawn food
         if not food_spawn:
             food_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
                         random.randrange(1, (frame_size_y // cell_size)) * cell_size]
-
         food_spawn = True
 
         if not antifood_spawn:
@@ -201,6 +196,8 @@ def print_text():
       textrect = surface.get_rect()
       textrect.center = (690, 210)
       game_window.blit(surface, textrect)
+
+
 
 
 if __name__ == '__main__':
