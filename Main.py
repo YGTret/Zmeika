@@ -36,7 +36,7 @@ cell_size = 60
 
 
 def init_vars():
-    global head_pos, snake_body, food_pos, food_spawn, score, direction, antifood_pos, antifood_spawn, speed, death
+    global head_pos, snake_body, food_pos, food_spawn, score, direction, antifood_pos, antifood_spawn, speed, death, border_pos, border_spawn
     direction = "RIGHT"
     head_pos = [120, 60]
     snake_body = [[120, 60]]
@@ -50,6 +50,10 @@ def init_vars():
     antifood_spawn = True
 
     death = False
+
+    border_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
+                random.randrange(1, (frame_size_y // cell_size)) * cell_size]
+    border_spawn = False
 
 
 init_vars()
@@ -69,7 +73,7 @@ def show_score(choice, color, font, size):
 
 # game loop
 def game():
-    global food_spawn, food_pos, score, center_food_x, center_food_y, radius, antifood_pos, antifood_spawn, center_antifood_x, center_antifood_y, speed, level
+    global food_spawn, food_pos, score, center_food_x, center_food_y, radius, antifood_pos, antifood_spawn, center_antifood_x, center_antifood_y, speed, level, border_spawn, border_pos
     while True:
         check_events()
         check_death()
@@ -90,6 +94,9 @@ def game():
             speed = 12
             level = 5
 
+
+
+
         # eating apple
         snake_body.insert(0, list(head_pos))
         if head_pos[0] == food_pos[0] and head_pos[1] == food_pos[1]:
@@ -99,9 +106,11 @@ def game():
         else:
             snake_body.pop()
 
+        #eating anti-food
         if head_pos[0] == antifood_pos[0] and head_pos[1] == antifood_pos[1]:
             snake_body.pop()
             antifood_spawn = False
+
 
 
         # spawn food
@@ -110,10 +119,16 @@ def game():
                         random.randrange(1, (frame_size_y // cell_size)) * cell_size]
         food_spawn = True
 
+        # anti-food spawn
+
         if not antifood_spawn:
             antifood_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
                             random.randrange(1, (frame_size_y // cell_size)) * cell_size]
         antifood_spawn = True
+
+        if border_spawn == True:
+            border_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
+                            random.randrange(1, (frame_size_y // cell_size)) * cell_size]
 
         game_window.fill(black)
         head = 1
@@ -133,6 +148,7 @@ def game():
 
         pygame.draw.circle(game_window, fiol, (center_food_x, center_food_y), radius, radius)
         pygame.draw.circle(game_window, red, (center_antifood_x, center_antifood_y), radius, radius)
+
 
 
 
