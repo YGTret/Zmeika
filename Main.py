@@ -81,9 +81,6 @@ def game():
         else:
             snake_body.pop()
 
-        if head_pos[0] == antifood_pos[0] and head_pos[1] == antifood_pos[1]:
-            snake_body.pop()
-            antifood_spawn = False
 
         # spawn food
         if not food_spawn:
@@ -92,10 +89,9 @@ def game():
 
         food_spawn = True
 
-        if not antifood_spawn:
-            antifood_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
-                            random.randrange(1, (frame_size_y // cell_size)) * cell_size]
-        antifood_spawn = True
+    if score = 5:
+        
+
 
         game_window.fill(black)
         head = 1
@@ -105,8 +101,6 @@ def game():
             radius = (cell_size - 2) // 2
             center_food_x = food_pos[0] + 2 + (cell_size - 2) // 2
             center_food_y = food_pos[1] + 2 + (cell_size - 2) // 2
-            center_antifood_x = antifood_pos[0] + 2 + (cell_size - 2) // 2
-            center_antifood_y = antifood_pos[1] + 2 + (cell_size - 2) // 2
             # pygame.draw.rect(game_window, green, pygame.Rect(
             #    pos[0] + 2, pos[1] + 2,
             #    square_size - 2, square_size - 2))
@@ -117,7 +111,6 @@ def game():
             pygame.draw.circle(game_window, blue, (center_x, center_y), radius, radius)
 
         pygame.draw.circle(game_window, red, (center_food_x, center_food_y), radius, radius)
-        pygame.draw.circle(game_window, fiol, (center_antifood_x, center_antifood_y), radius, radius)
 
         # GAME OVER
         for block in snake_body[1:]:
@@ -183,7 +176,7 @@ def check_death():
 
     for block in snake_body[1:]:
         if head_pos[0] == block[0] and head_pos[1] == block[1]:
-            death = True
+            init_vars()
 
 
 def print_text():
