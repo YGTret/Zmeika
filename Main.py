@@ -2,6 +2,7 @@ import pygame
 import random
 import sys
 
+speed = 2
 
 level = 0
 x = 0
@@ -88,10 +89,22 @@ def game():
                         random.randrange(1, (frame_size_y // cell_size)) * cell_size]
 
         food_spawn = True
-
-    if score = 5:
         
+        if score == 5:
+            speed = 5
+            level = 1
 
+        if score == 10:
+            speed = 7
+            level = 2
+
+        if score == 15:
+            speed = 9
+            level = 3
+
+        if score == 20:
+            speed = 11
+            level = 4
 
         game_window.fill(black)
         head = 1
@@ -184,9 +197,16 @@ def print_text():
   if death:
       font1 = pygame.font.SysFont('arial', 42)
       surface = font1.render('Game Over, Press Y to continue or press N to quit', True, blue)
+      surface1 = font1.render('Your Level is ' +str(level),True, red)
+     # surface2 = font1.render('Your score is' +str(score),True, fiol)
       textrect = surface.get_rect()
       textrect.center = (690, 210)
+      textrect1 = surface1.get_rect()
+      textrect1.center = (690, 300)
+      #textrect2
       game_window.blit(surface, textrect)
+      game_window.blit(surface1, textrect1)
+
 
 
 if __name__ == '__main__':
