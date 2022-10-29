@@ -36,7 +36,7 @@ cell_size = 60
 
 
 def init_vars():
-    global head_pos, snake_body, food_pos, food_spawn, score, direction, antifood_pos, antifood_spawn, speed, death
+    global head_pos, snake_body, food_pos, food_spawn, score, direction,  speed, death
     direction = "RIGHT"
     head_pos = [120, 60]
     snake_body = [[120, 60]]
@@ -45,9 +45,6 @@ def init_vars():
     food_spawn = True
     score = 0
     speed = 2
-    antifood_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
-                    random.randrange(1, (frame_size_y // cell_size)) * cell_size]
-    antifood_spawn = True
 
     death = False
 
@@ -69,10 +66,11 @@ def show_score(choice, color, font, size):
 
 # game loop
 def game():
-    global food_spawn, food_pos, score, center_food_x, center_food_y, radius, antifood_pos, antifood_spawn, center_antifood_x, center_antifood_y, speed, level
+    global food_spawn, food_pos, score,  radius,   speed, level, center_food_x, center_food_y
     while True:
         check_events()
         check_death()
+        level_up()
 
         # eating apple
         snake_body.insert(0, list(head_pos))
@@ -82,53 +80,32 @@ def game():
         else:
             snake_body.pop()
 
-
         # spawn food
         if not food_spawn:
             food_pos = [random.randrange(1, (frame_size_x // cell_size)) * cell_size,
                         random.randrange(1, (frame_size_y // cell_size)) * cell_size]
 
         food_spawn = True
-        
-        if score == 5:
-            speed = 5
-            level = 1
 
-        if score == 10:
-            speed = 7
-            level = 2
+        if death == False:
+            game_window.fill(black)
+            head = 1
+            for pos in snake_body:
+                center_x = pos[0] + 2 + (cell_size - 2) // 2
+                center_y = pos[1] + 2 + (cell_size - 2) // 2
+                radius = (cell_size - 2) // 2
+                center_food_x = food_pos[0] + 2 + (cell_size - 2) // 2
+                center_food_y = food_pos[1] + 2 + (cell_size - 2) // 2
+                # pygame.draw.rect(game_window, green, pygame.Rect(
+                #    pos[0] + 2, pos[1] + 2,
+                #    square_size - 2, square_size - 2))
+                if head == 1:
+                    pygame.draw.circle(game_window, green, (center_x, center_y), radius, radius)
+                    head = 0
+                    continue
+                pygame.draw.circle(game_window, blue, (center_x, center_y), radius, radius)
 
-        if score == 15:
-            speed = 9
-            level = 3
-
-        if score == 20:
-            speed = 11
-            level = 4
-
-        game_window.fill(black)
-        head = 1
-        for pos in snake_body:
-            center_x = pos[0] + 2 + (cell_size - 2) // 2
-            center_y = pos[1] + 2 + (cell_size - 2) // 2
-            radius = (cell_size - 2) // 2
-            center_food_x = food_pos[0] + 2 + (cell_size - 2) // 2
-            center_food_y = food_pos[1] + 2 + (cell_size - 2) // 2
-            # pygame.draw.rect(game_window, green, pygame.Rect(
-            #    pos[0] + 2, pos[1] + 2,
-            #    square_size - 2, square_size - 2))
-            if head == 1:
-                pygame.draw.circle(game_window, green, (center_x, center_y), radius, radius)
-                head = 0
-                continue
-            pygame.draw.circle(game_window, blue, (center_x, center_y), radius, radius)
-
-        pygame.draw.circle(game_window, red, (center_food_x, center_food_y), radius, radius)
-
-        # GAME OVER
-        for block in snake_body[1:]:
-            if head_pos[0] == block[0] and head_pos[1] == block[1]:
-                init_vars()
+            pygame.draw.circle(game_window, red, (center_food_x, center_food_y), radius, radius)
 
         show_score(1, white, 'consolas', 20)
         print_text()
@@ -184,12 +161,9 @@ def check_death():
     elif head_pos[1] > frame_size_y - cell_size:
         death = True
 
-    elif len(snake_body) == 0:
-        death = True
-
     for block in snake_body[1:]:
         if head_pos[0] == block[0] and head_pos[1] == block[1]:
-            init_vars()
+            death = True
 
 
 def print_text():
@@ -198,15 +172,34 @@ def print_text():
       font1 = pygame.font.SysFont('arial', 42)
       surface = font1.render('Game Over, Press Y to continue or press N to quit', True, blue)
       surface1 = font1.render('Your Level is ' +str(level),True, red)
-     # surface2 = font1.render('Your score is' +str(score),True, fiol)
+      surface2 = font1.render('Your Score is ' +str(score),True, fiol)
       textrect = surface.get_rect()
       textrect.center = (690, 210)
       textrect1 = surface1.get_rect()
       textrect1.center = (690, 300)
-      #textrect2
+      textrect2 = surface2.get_rect()
+      textrect2.center = (690, 400)
       game_window.blit(surface, textrect)
       game_window.blit(surface1, textrect1)
+      game_window.blit(surface2,textrect2)
 
+def level_up():
+    global score, level, speed
+    if score == 5:
+        speed = 5
+        level = 1
+
+    if score == 10:
+        speed = 7
+        level = 2
+
+    if score == 15:
+        speed = 9
+        level = 3
+
+    if score == 20:
+        speed = 11
+        level = 4
 
 
 if __name__ == '__main__':
